@@ -133,12 +133,16 @@ int RpiDmxOutput::buildDmxPacket()
 {
     int ch;
     int pidx = 0;
+    int allNullFrame = 1;
+    int allFullFrame = 1;
 
     firstUni = true;
 
     // For every universe
     for (unsigned int uni = 0; uni< numUniverses; uni++)
     {
+        allNullFrame = 1;
+        allFullFrame = 1;
         //std::cout << "buildDmxPacket. numUniverses: " << numUniverses << " Univ: " << uni << std::endl;
 
         // We have to reset this so we send all universes AT ONCE
@@ -170,7 +174,20 @@ int RpiDmxOutput::buildDmxPacket()
         // Iterate over the channels of this universe
         for (ch = 0; ch < 512; ch++)
         {
+            if (DmxBuffers[uni][ch] != 0) {
+                allNullFrame = 0;
+            }
+            if (DmxBuffers[uni][ch] != 255) {
+                allFullFrame = 0;
+            }
             outputSerialbyte(&pidx, GPIOs[uni], DmxBuffers[uni][ch]);
+        }
+
+        if (allNullFrame) {
+            std::cout << "All null frame on universe " << uni << std::endl;
+        }
+        if (allFullFrame) {
+            std::cout << "All FULL frame on universe " << uni << std::endl;
         }
 
         // Idle high for POSTPACKET_IDLE_US
