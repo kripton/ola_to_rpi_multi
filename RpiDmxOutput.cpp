@@ -139,7 +139,7 @@ int RpiDmxOutput::buildDmxPacket()
     // For every universe
     for (unsigned int uni = 0; uni< numUniverses; uni++)
     {
-        std::cout << "buildDmxPacket. numUniverses: " << numUniverses << " Univ: " << uni << std::endl;
+        //std::cout << "buildDmxPacket. numUniverses: " << numUniverses << " Univ: " << uni << std::endl;
 
         // We have to reset this so we send all universes AT ONCE
         // and not one after the other

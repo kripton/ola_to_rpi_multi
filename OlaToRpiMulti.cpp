@@ -43,7 +43,7 @@ void OlaToRpiMulti::NewFrame(const ola::client::DMXMetadata &meta, const ola::Dm
     std::vector<unsigned int>::iterator it;
     unsigned int index = UINT_MAX;
 
-    std::cout << "NewFrame! Universe Id: " << meta.universe << " Size: " << data.Size() << std::endl;
+    //std::cout << "NewFrame! Universe Id: " << meta.universe << " Size: " << data.Size() << std::endl;
 
     // Get the "index" of the universe we only got the id from
     it = std::find (m_universes.begin(), m_universes.end(), meta.universe);
