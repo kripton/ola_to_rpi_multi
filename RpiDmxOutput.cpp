@@ -11,13 +11,20 @@ RpiDmxOutput::RpiDmxOutput(unsigned int numberOfUniverses)
     {
         std::cout << "OLA currently has " << numberOfUniverses << " but we only support " << MAX_UNIVERSES << ". Truncated" << std::endl;
         numberOfUniverses = MAX_UNIVERSES;
-
     }
+
+    numUniverses = numberOfUniverses;
 
     for (unsigned int i = 0; i < numberOfUniverses; i++)
     {
         std::cout << "Configuring GPIO " << GPIOs[i] << " for universe " << i << std::endl;
         gpioSetMode(GPIOs[i], PI_OUTPUT);
+    }
+
+    if (triggerHelper)
+    {
+        std::cout << "Trigger helper ACTIVE on GPIO " << triggerHelper << std::endl;
+        gpioSetMode(triggerHelper, PI_OUTPUT);
     }
 }
 
@@ -111,11 +118,13 @@ void RpiDmxOutput::outputSerialbyte(int *pidx, int GPIO, uint8_t c)
 int RpiDmxOutput::buildDmxPacket()
 {
     int ch;
-    int pidx;
+    int pidx = 0;
 
     // For every universe
     for (unsigned int uni = 0; uni< numUniverses; uni++)
     {
+        std::cout << "buildDmxPacket. numUniverses: " << numUniverses << " Univ: " << uni << std::endl;
+
         // We have to reset this so we send all universes AT ONCE
         // and not one after the other
         // Since they will all create the same number of bits this
@@ -128,7 +137,19 @@ int RpiDmxOutput::buildDmxPacket()
 #endif
 
         // BREAK
-        outputLow(&pidx, GPIOs[uni], BREAK_US);
+        if (triggerHelper)
+        {
+            outputLow(&pidx, GPIOs[uni], BREAK_US/4);
+
+            outputHigh(&pidx, triggerHelper, BREAK_US/4);
+            outputLow(&pidx, triggerHelper, BREAK_US/4);
+
+            outputLow(&pidx, GPIOs[uni], BREAK_US/4);
+        }
+        else
+        {
+            outputLow(&pidx, GPIOs[uni], BREAK_US);
+        }
 
         // MAB (= Mark after break)
         outputHigh(&pidx, GPIOs[uni],MAB_US);
