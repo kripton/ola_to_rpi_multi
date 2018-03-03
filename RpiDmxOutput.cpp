@@ -1,4 +1,4 @@
-#include "RpiDmxOutput.h"
+#include "RpiDmxOutput.hpp"
 
 RpiDmxOutput::RpiDmxOutput(unsigned int numberOfUniverses)
 {
