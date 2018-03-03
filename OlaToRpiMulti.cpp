@@ -78,6 +78,9 @@ void OlaToRpiMulti::UniverseListCallback(const ola::client::Result& result, cons
         rpiOut = new RpiDmxOutput(universes.size());
         rpiOut->Start();
 
+        // TODO Fetch initial values of each universe we registered for
+        //      instead of waiting for first change
+
     } else {
         std::cout << "Unable to get list of universes :(" << std::endl;
     }
