@@ -137,7 +137,7 @@ int RpiDmxOutput::buildDmxPacket()
         outputSerialbyte(&pidx, GPIOs[uni], 0);
 
         // Iterate over the channels of this universe
-        for (ch = 1; ch <= 512; ch++)
+        for (ch = 0; ch < 512; ch++)
         {
             outputSerialbyte(&pidx, GPIOs[uni], DmxBuffers[uni][ch]);
         }
