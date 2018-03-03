@@ -40,17 +40,21 @@ private:
     unsigned int numUniverses = 0;
 
     // We provide 10 GPIOs here, from lowest to highest
-    // Sparing out: 2,3 (I2C); 9,10 (MISO, MOSI); 14,15 (UART); 27 (trigger
-    // helper, see below)
-    // If you'd like to spare SCLK, CE0 and CE1 OR not use the trigger helper
+    // Sparing out: 2,3 (I2C); 9,10 (MISO, MOSI); 14,15 (UART);
+    // 27 (driver-enable, see below)
+    // If you'd like to spare SCLK, CE0 and CE1 OR not use the driver-enable
     // in order to output more universes, change the array and MAX_UNIVERSES
     // Of course you can also use more GPIOs on RPi models featuring more GPIOs
+
+    // Raspberry Pi 1 A, B
     const int GPIOs[MAX_UNIVERSES] = {4, 7, 8, 11, 17, 18, 22, 23, 24, 25}; //, 27};
 
-    // Optional oscilloscope trigger helper: Short burst during BREAK to
-    // trigger an oscilloscope to the start of the DMX frames
+    // Optional "driver enable" output that is active while a frame is
+    // being sent and not active while the data for the next frame is being
+    // prepared
+    // Can also be used to trigger an oscilloscope to the start of a DMX frame
     // Set to 0 to disable
-    int triggerHelper = 27;
+    int driverEnable = 27;
 
     // Actual DMX values for as many universes as we support
     uint8_t DmxBuffers[MAX_UNIVERSES][512];

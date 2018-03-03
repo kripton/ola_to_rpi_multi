@@ -21,10 +21,10 @@ RpiDmxOutput::RpiDmxOutput(unsigned int numberOfUniverses)
         gpioSetMode(GPIOs[i], PI_OUTPUT);
     }
 
-    if (triggerHelper)
+    if (driverEnable)
     {
-        std::cout << "Trigger helper ACTIVE on GPIO " << triggerHelper << std::endl;
-        gpioSetMode(triggerHelper, PI_OUTPUT);
+        std::cout << "Driver-Enable output ACTIVE on GPIO " << driverEnable << std::endl;
+        gpioSetMode(driverEnable, PI_OUTPUT);
     }
 }
 
@@ -147,25 +147,19 @@ int RpiDmxOutput::buildDmxPacket()
         // should not be a problem
         pidx = 0;
 
+        // If driver-enable output is to be used, enable the driver first
+        if (driverEnable)
+        {
+            outputHigh(&pidx, driverEnable, SR);
+        }
+
         // PRE packet idle time
 #ifdef PREPACKET_IDLE_US
         output_high(&pidx, GPIOs[uni], PREPACKET_IDLE_US);
 #endif
 
         // BREAK
-        if (triggerHelper)
-        {
-            outputLow(&pidx, GPIOs[uni], BREAK_US/4);
-
-            outputHigh(&pidx, triggerHelper, BREAK_US/4);
-            outputLow(&pidx, triggerHelper, BREAK_US/4);
-
-            outputLow(&pidx, GPIOs[uni], BREAK_US/4);
-        }
-        else
-        {
-            outputLow(&pidx, GPIOs[uni], BREAK_US);
-        }
+        outputLow(&pidx, GPIOs[uni], BREAK_US);
 
         // MAB (= Mark after break)
         outputHigh(&pidx, GPIOs[uni],MAB_US);
@@ -181,6 +175,12 @@ int RpiDmxOutput::buildDmxPacket()
 
         // Idle high for POSTPACKET_IDLE_US
         outputHigh(&pidx, GPIOs[uni], POSTPACKET_IDLE_US);
+
+        // Release the driver-enable output
+        if (driverEnable)
+        {
+            outputLow(&pidx, driverEnable, SR);
+        }
 
         firstUni = false;
     }

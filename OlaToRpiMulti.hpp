@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-#include "RpiDmxOutput.h"
+#include "RpiDmxOutput.hpp"
 
 #ifndef OLATORPIMULTI_H_
 #define OLATORPIMULTI_H_

@@ -68,12 +68,12 @@ clean: compiler_clean
 ####### Compile
 
 main.o: main.cpp OlaToRpiMulti.hpp \
-		RpiDmxOutput.h
+		RpiDmxOutput.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 OlaToRpiMulti.o: OlaToRpiMulti.cpp OlaToRpiMulti.hpp \
-		RpiDmxOutput.h
+		RpiDmxOutput.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o OlaToRpiMulti.o OlaToRpiMulti.cpp
 
-RpiDmxOutput.o: RpiDmxOutput.cpp RpiDmxOutput.h
+RpiDmxOutput.o: RpiDmxOutput.cpp RpiDmxOutput.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o RpiDmxOutput.o RpiDmxOutput.cpp
