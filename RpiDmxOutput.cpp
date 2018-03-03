@@ -76,17 +76,31 @@ void RpiDmxOutput::Run()
 
 void RpiDmxOutput::outputLow(int *idx, int GPIO, int duration_us)
 {
-    pulse[*idx].gpioOn = (1<<GPIO);
-    pulse[*idx].gpioOff = 0;
-    pulse[*idx].usDelay = duration_us;
+    if (firstUni)
+    {
+        pulse[*idx].gpioOn = (1<<GPIO);
+        pulse[*idx].gpioOff = 0;
+        pulse[*idx].usDelay = duration_us;
+    }
+    else
+    {
+        pulse[*idx].gpioOn |= (1<<GPIO);
+    }
     *idx=*idx+1;
 }
 
 void RpiDmxOutput::outputHigh(int *idx, int GPIO, int duration_us)
 {
-    pulse[*idx].gpioOn = 0;
-    pulse[*idx].gpioOff = (1<<GPIO);
-    pulse[*idx].usDelay = duration_us;
+    if (firstUni)
+    {
+        pulse[*idx].gpioOn = 0;
+        pulse[*idx].gpioOff = (1<<GPIO);
+        pulse[*idx].usDelay = duration_us;
+    }
+    else
+    {
+        pulse[*idx].gpioOff |= (1<<GPIO);
+    }
     *idx=*idx+1;
 }
 
@@ -119,6 +133,8 @@ int RpiDmxOutput::buildDmxPacket()
 {
     int ch;
     int pidx = 0;
+
+    firstUni = true;
 
     // For every universe
     for (unsigned int uni = 0; uni< numUniverses; uni++)
@@ -165,6 +181,8 @@ int RpiDmxOutput::buildDmxPacket()
 
         // Idle high for POSTPACKET_IDLE_US
         outputHigh(&pidx, GPIOs[uni], POSTPACKET_IDLE_US);
+
+        firstUni = false;
     }
 
     return(pidx);
