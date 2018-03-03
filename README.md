@@ -10,8 +10,8 @@ a minimal Makefile so qmake is not strictly needed.
 
 ### Prerequisites
 
-Open Lighting Architecture (OLA) running on the Pi: https://www.openlighting.org/ola/
-PiGPIO library: http://abyz.me.uk/rpi/pigpio/index.html
+* Open Lighting Architecture (OLA) running on the Pi: https://www.openlighting.org/ola/
+* PiGPIO library: http://abyz.me.uk/rpi/pigpio/index.html
 
 ## License
 
