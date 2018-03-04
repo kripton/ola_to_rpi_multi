@@ -14,4 +14,4 @@ SOURCES += main.cpp \
 
 HEADERS += \
     OlaToRpiMulti.hpp \
-    RpiDmxOutput.h
+    RpiDmxOutput.hpp
