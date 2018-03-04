@@ -6,7 +6,7 @@ CONFIG += link_pkgconfig
 
 PKGCONFIG += libola
 
-LIBS += -lpigpio
+LIBS += -lpigpiod_if2
 
 SOURCES += main.cpp \
     OlaToRpiMulti.cpp \

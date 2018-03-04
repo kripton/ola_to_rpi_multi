@@ -9,7 +9,7 @@
 #include <iostream>
 #include <string>
 
-#include <pigpio.h>
+#include <pigpiod_if2.h>
 
 // Maximum number of universes this class supports
 #define MAX_UNIVERSES       10
@@ -61,6 +61,9 @@ private:
 
     // The awesome GPIO wave table
     gpioPulse_t pulse[NUM_RAWBITS];
+
+    // Our connection handle to the pipgiod daemon
+    int pigpiodHandle = 0;
 
     // Main worker function and exit condition
     void Run();
