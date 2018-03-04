@@ -15,3 +15,7 @@ SOURCES += main.cpp \
 HEADERS += \
     OlaToRpiMulti.hpp \
     RpiDmxOutput.hpp
+
+DISTFILES += \
+    README.md \
+    LICENSE
