@@ -4,8 +4,8 @@ RpiDmxOutput::RpiDmxOutput(unsigned int numberOfUniverses)
 {
     std::cout << "RpiDmxOutput INIT! PIGPIO version: " << PIGPIO_VERSION << std::endl;
 
-    int gpioInit = gpioInitialise();
-    std::cout << "gpioInitialise() returned: " << gpioInit << std::endl;
+    pigpiodHandle = pigpio_start(NULL, NULL);
+    std::cout << "pigpio_start() returned: " << pigpiodHandle << std::endl;
 
     if (MAX_UNIVERSES < numberOfUniverses)
     {
@@ -18,13 +18,13 @@ RpiDmxOutput::RpiDmxOutput(unsigned int numberOfUniverses)
     for (unsigned int i = 0; i < numberOfUniverses; i++)
     {
         std::cout << "Configuring GPIO " << GPIOs[i] << " for universe " << i << std::endl;
-        gpioSetMode(GPIOs[i], PI_OUTPUT);
+        set_mode(pigpiodHandle, GPIOs[i], PI_OUTPUT);
     }
 
     if (driverEnable)
     {
         std::cout << "Driver-Enable output ACTIVE on GPIO " << driverEnable << std::endl;
-        gpioSetMode(driverEnable, PI_OUTPUT);
+        set_mode(pigpiodHandle, driverEnable, PI_OUTPUT);
     }
 }
 
@@ -54,7 +54,7 @@ void RpiDmxOutput::Stop()
         workerThread.join();
     }
 
-    gpioTerminate();
+    pigpio_stop(pigpiodHandle);
 }
 
 void RpiDmxOutput::Run()
@@ -192,20 +192,20 @@ void RpiDmxOutput::sendDmxPacket(int numbits)
 {
     int wave_id=0;
 
-    gpioWaveAddGeneric(numbits, pulse);
+    wave_add_generic(pigpiodHandle, numbits, pulse);
 
-    wave_id = gpioWaveCreate();
+    wave_id = wave_create(pigpiodHandle);
 
     // Send this bit pattern once via DMA IO
-    gpioWaveTxSend(wave_id, PI_WAVE_MODE_ONE_SHOT);
+    wave_send_once(pigpiodHandle, wave_id);
 
     // Poll for DMA IO to complete
-    while (gpioWaveTxBusy() == 1)
+    while (wave_tx_busy(pigpiodHandle) == 1)
     {
         // yield to kernel while DMA is in progress
         usleep(500);
     }
 
     // finished with this pattern
-    gpioWaveDelete(wave_id);
+    wave_delete(pigpiodHandle, wave_id);
 }
