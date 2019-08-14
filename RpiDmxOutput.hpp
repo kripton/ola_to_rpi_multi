@@ -15,13 +15,13 @@
 #define MAX_UNIVERSES       10
 
 // Large enough to hold the DMX512 packet in bit form
-#define NUM_RAWBITS         6000
+#define NUM_RAWBITS         8192
 
 // Timings
-#define BREAK_US            92  // low
-#define MAB_US              92  // high
+#define BREAK_US            256  // low
+#define MAB_US              128 // high
 //#define PREPACKET_IDLE_US   20  // comment out to disable
-#define POSTPACKET_IDLE_US  5   // high
+#define POSTPACKET_IDLE_US  0   // high
 #define SR                  4   // symbol rate, 4us per bit
 
 
