@@ -18,10 +18,10 @@
 #define NUM_RAWBITS         6000
 
 // Timings
-#define BREAK_US            200  // low
-#define MAB_US              170  // high
+#define BREAK_US            92  // low
+#define MAB_US              92  // high
 //#define PREPACKET_IDLE_US   20  // comment out to disable
-#define POSTPACKET_IDLE_US  50   // high
+#define POSTPACKET_IDLE_US  5   // high
 #define SR                  4   // symbol rate, 4us per bit
 
 
