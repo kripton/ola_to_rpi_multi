@@ -176,6 +176,9 @@ int RpiDmxOutput::buildDmxPacket()
         // Idle high for POSTPACKET_IDLE_US
         outputHigh(&pidx, GPIOs[uni], POSTPACKET_IDLE_US);
 
+	// Bring output LOW until next BREAK starts
+	outputLow(&pidx, GPIOs[uni], 4);
+
         // Release the driver-enable output
         if (driverEnable)
         {
