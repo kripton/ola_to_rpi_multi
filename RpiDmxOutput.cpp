@@ -30,10 +30,14 @@ RpiDmxOutput::RpiDmxOutput(unsigned int numberOfUniverses)
 
 void RpiDmxOutput::SetDmxData(unsigned int universeIndex, const uint8_t *data, const unsigned int size)
 {
+    updateInProgress = true;
+
     // memcopy the data from the given buffer into our internal buffer
     unsigned int copySize = MIN(512, size);
 
     std::memcpy(DmxBuffers[universeIndex], data, copySize);
+
+    updateInProgress = false;
 }
 
 void RpiDmxOutput::Start()
@@ -65,6 +69,12 @@ void RpiDmxOutput::Run()
     std::cout << "RpiDmxOutput::Run() starting :D" << std::endl;
     while (shallRun)
     {
+        // Wait until data transfer is done
+        while (updateInProgress) {
+            std::cout << "Update in progress, waiting ..." << std::endl;
+            usleep(5);
+        }
+
         // Generate the wave table
         numbits = buildDmxPacket();
 

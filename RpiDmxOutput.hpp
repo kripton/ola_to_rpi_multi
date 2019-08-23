@@ -74,6 +74,9 @@ private:
     // Helper var to make sure we correctly initialize the wave table with the first universe
     bool firstUni = true;
 
+    // Helper flag to stop data from being output while we are getting new data
+    bool updateInProgress = false;
+
     // Helper functions to generate the wave table from the DmxBuffer
     void outputLow(int *idx, int GPIO, int duration_us);
     void outputHigh(int *idx, int GPIO, int duration_us);
